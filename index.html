@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            padding-bottom: 40px;
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        .profile-card {
+            width: 400px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 0, 0, 0) 0%,
+                rgba(255, 0, 0, 0) 30%,
+                rgba(255, 0, 0, 0.1) 45%,
+                rgba(255, 0, 0, 0.3) 60%,
+                rgba(255, 0, 0, 0) 70%
+            );
+            transform: rotate(30deg);
+            animation: shine 6s infinite;
+        }
+        @keyframes shine {
+            0% {
+                transform: rotate(30deg) translate(-30%, -30%);
+            }
+            100% {
+                transform: rotate(30deg) translate(30%, 30%);
+            }
+        }
+        .profile-card:hover {
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
+            transform: translateY(-5px);
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            overflow: hidden;
+            border: 4px solid rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.7);
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-pic::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: rgba(255, 0, 0, 0.7);
+            border-left-color: rgba(255, 0, 0, 0.7);
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .name {
+            text-align: center;
+            color: #fff;
+            font-size: 26px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+        }
+        .bio {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .date {
+            text-align: center;
+            color: rgba(255, 0, 0, 0.9);
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.1) 0%, rgba(255, 0, 0, 0) 70%);
+            animation: pulse 4s infinite alternate;
+            z-index: -1;
+            border-radius: 20px;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .corner-tl {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 8px 0 0 0;
+        }
+        .corner-tr {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 8px 0 0;
+        }
+        .corner-bl {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 8px;
+        }
+        .corner-br {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 8px 0;
+        }
+        .profile-card:hover .corner {
+            opacity: 1;
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.3);
+            transform: scale(0);
+            animation: ripple 3s infinite;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        .friend-btn {
+            display: block;
+            width: 180px;
+            margin: 0 auto;
+            padding: 12px 25px;
+            background: rgba(255, 0, 0, 0.4);
+            color: white;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .friend-btn:hover {
+            background: rgba(255, 0, 0, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+        }
+        .friend-btn:active {
+            transform: translateY(0);
+        }
+        .friend-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .friend-btn:focus:not(:active)::after {
+            animation: ripple-effect 1s ease-out;
+        }
+        @keyframes ripple-effect {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        .copied {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            font-size: 16px;
+        }
+        .show {
+            opacity: 1;
+        }
+        .copyright {
+            position: fixed;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            padding: 10px;
+            z-index: 100;
+        }
+        .copyright a {
+            color: rgba(255, 0, 0, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .copyright a:hover {
+            color: rgba(255, 0, 0, 1);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="background" id="background"></div>
+    <div class="profile-card">
+        <div class="glow"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div class="profile-pic">
+            <img src="https://static.wikia.nocookie.net/near_pure_evil/images/2/24/Light_Yagami.jpg/revision/latest?cb=20241230145442" alt="Profile Picture">
+        </div>
+        <h1 class="name">Lester Crest</h1>
+        <p class="bio">Les egirls pedo jvous hais💔</p>
+        <p class="date">Février 2025>>>></p>
+        <button class="friend-btn" id="friendBtn">Friend Me</button>
+    </div>
+    <div class="copied" id="copiedMessage">Username copied to clipboard!</div>
+    <div class="copyright">© Hazinf - <a href="#" id="usageLink"></a></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const background = document.getElementById('background');
+            for (let i = 0; i < 50; i++) {
+                createParticle();
+            }
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                background.appendChild(particle);
+                setTimeout(() => {
+                    particle.remove();
+                    createParticle();
+                }, parseFloat(particle.style.animationDuration) * 1000);
+            }
+            const card = document.querySelector('.profile-card');
+            card.addEventListener('mousemove', function(e) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', x);
+                card.style.setProperty('--mouse-y', y);
+            });
+            function createRipple(e) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                ripple.style.left = e.clientX + 'px';
+                ripple.style.top = e.clientY + 'px';
+                document.body.appendChild(ripple);
+                setTimeout(() => {
+                    ripple.remove();
+                }, 3000);
+            }
+            document.addEventListener('click', createRipple);
+            setInterval(() => {
+                const corners = document.querySelectorAll('.corner');
+                corners.forEach(corner => {
+                    corner.style.borderColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 100)}, ${Math.floor(Math.random() * 100)}, 0.7)`;
+                });
+            }, 2000);
+            const friendBtn = document.getElementById('friendBtn');
+            const copiedMessage = document.getElementById('copiedMessage');
+            friendBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText('lestercrest_').then(() => {
+                    copiedMessage.classList.add('show');
+                    setTimeout(() => {
+                        copiedMessage.classList.remove('show');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+            const usageLink = document.getElementById('usageLink');
+            usageLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Reach me at Hazinf on Discord.');
+            });
+        });
+    </script>
+</body>
+</html>
